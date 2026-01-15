@@ -1,0 +1,108 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id                     String    @id @default(uuid())
+  email                  String    @unique
+  passwordHash           String    @map("password_hash")
+  username               String    @unique // Уникальный username
+  displayName            String?   @map("display_name") // Опциональное отображаемое имя
+  avatarUrl              String?   @map("avatar_url")
+  emailVerified          Boolean   @default(false) @map("email_verified")
+  emailVerificationToken String?   @unique @map("email_verification_token")
+  emailVerifiedAt        DateTime? @map("email_verified_at")
+  passwordResetToken     String?   @unique @map("password_reset_token")
+  passwordResetExpires   DateTime? @map("password_reset_expires")
+  usernameChangedAt      DateTime? @map("username_changed_at") // Для rate limiting
+  
+  // Admin fields - role is String because SQLite doesn't support enums
+  // Valid values: "USER", "ADMIN", "SUPER_ADMIN"
+  role                   String    @default("USER")
+  isBlocked              Boolean   @default(false) @map("is_blocked")
+  blockedAt              DateTime? @map("blocked_at")
+  blockedBy              String?   @map("blocked_by") // Admin ID who blocked
+  blockReason            String?   @map("block_reason")
+  
+  createdAt              DateTime  @default(now()) @map("created_at")
+  updatedAt              DateTime  @updatedAt @map("updated_at")
+  lastLoginAt            DateTime? @map("last_login_at")
+
+  sessions      Session[]
+  activityLogs  ActivityLog[]
+  auditLogs     AuditLog[]
+
+  @@index([role])
+  @@index([isBlocked])
+  @@index([createdAt])
+  @@index([lastLoginAt])
+  @@map("users")
+}
+
+model Session {
+  id               String   @id @default(uuid())
+  userId           String   @map("user_id")
+  refreshTokenHash String   @map("refresh_token_hash")
+  userAgent        String?  @map("user_agent")
+  ipAddress        String?  @map("ip_address")
+  expiresAt        DateTime @map("expires_at")
+  createdAt        DateTime @default(now()) @map("created_at")
+  lastUsedAt       DateTime @default(now()) @map("last_used_at")
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("sessions")
+}
+
+model ActivityLog {
+  id        String   @id @default(uuid())
+  userId    String   @map("user_id")
+  action    String
+  ipAddress String?  @map("ip_address")
+  userAgent String?  @map("user_agent")
+  metadata  String?  // JSON as String for SQLite
+  createdAt DateTime @default(now()) @map("created_at")
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("activity_logs")
+}
+
+// Admin Audit Logs - tracks all admin actions
+model AuditLog {
+  id        String   @id @default(uuid())
+  userId    String?  @map("user_id") // Nullable for system actions
+  action    String   // "USER_CREATED", "USER_DELETED", "USER_BLOCKED", etc.
+  entity    String   // "User", "Profile", "Settings"
+  entityId  String?  @map("entity_id") // ID of affected entity
+  metadata  String?  // JSON string with old/new values
+  ipAddress String?  @map("ip_address")
+  userAgent String?  @map("user_agent")
+  createdAt DateTime @default(now()) @map("created_at")
+
+  user User? @relation(fields: [userId], references: [id], onDelete: SetNull)
+
+  @@index([userId, createdAt])
+  @@index([action, createdAt])
+  @@index([createdAt])
+  @@map("audit_logs")
+}
+
+// System Settings - configurable app settings
+model SystemSetting {
+  id        String   @id @default(uuid())
+  key       String   @unique // "MAX_FILE_SIZE", "EMAIL_ENABLED", etc.
+  value     String   // JSON string
+  updatedAt DateTime @updatedAt @map("updated_at")
+  updatedBy String?  @map("updated_by") // Admin ID who changed
+
+  @@map("system_settings")
+}

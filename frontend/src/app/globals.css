@@ -1,0 +1,283 @@
+/* ===================================
+   Professional Design System - Global Styles
+   Following industry best practices
+   =================================== */
+
+/* CSS Variables - Theme System */
+:root {
+  /* Light theme - Professional gray backgrounds */
+  --color-bg-primary: 249 250 251;
+  /* Subtle gray instead of pure white */
+  --color-bg-secondary: 243 244 246;
+  --color-bg-tertiary: 229 231 235;
+  --color-bg-inverse: 17 24 39;
+
+  --color-text-primary: 17 24 39;
+  /* Dark gray for text */
+  --color-text-secondary: 31 41 55;
+  /* neutral-800 - Dark gray for excellent readability */
+  --color-text-tertiary: 55 65 81;
+  /* neutral-700 - Medium gray */
+  --color-text-inverse: 255 255 255;
+  --color-text-link: 37 99 235;
+
+  --color-border-default: 229 231 235;
+  /* Subtle borders */
+  --color-border-hover: 209 213 219;
+  --color-border-focus: 59 130 246;
+
+  --color-surface-primary: 255 255 255;
+  /* White cards on gray background */
+  --color-surface-secondary: 249 250 251;
+  --color-surface-tertiary: 243 244 246;
+}
+
+.dark {
+  /* Dark theme - Softer, eye-friendly colors */
+  --color-bg-primary: 3 7 18;
+  /* Very dark blue-black */
+  --color-bg-secondary: 15 23 42;
+  /* Dark slate */
+  --color-bg-tertiary: 30 41 59;
+  --color-bg-inverse: 255 255 255;
+
+  --color-text-primary: 241 245 249;
+  /* Soft white (not pure white) */
+  --color-text-secondary: 148 163 184;
+  /* Muted gray */
+  --color-text-tertiary: 100 116 139;
+  /* Darker gray */
+  --color-text-inverse: 15 23 42;
+  --color-text-link: 96 165 250;
+
+  --color-border-default: 30 41 59;
+  /* Very dark gray - almost invisible */
+  --color-border-hover: 51 65 85;
+  --color-border-focus: 59 130 246;
+
+  --color-surface-primary: 15 23 42;
+  /* Dark cards (not pure black) */
+  --color-surface-secondary: 30 41 59;
+  --color-surface-tertiary: 51 65 85;
+}
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ===================================
+   Base Styles
+   =================================== */
+
+@layer base {
+
+  /* Typography */
+  body {
+    background-color: rgb(var(--color-bg-primary));
+    color: rgb(var(--color-text-primary));
+    font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    font-size: 1rem;
+    line-height: 1.5;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  /* Headings */
+  h1 {
+    font-size: 2.25rem;
+    font-weight: 700;
+    line-height: 1.2;
+    letter-spacing: -0.01em;
+    color: rgb(var(--color-text-primary));
+  }
+
+  h2 {
+    font-size: 1.875rem;
+    font-weight: 600;
+    line-height: 1.3;
+    letter-spacing: -0.01em;
+    color: rgb(var(--color-text-primary));
+  }
+
+  h3 {
+    font-size: 1.5rem;
+    font-weight: 600;
+    line-height: 1.4;
+    color: rgb(var(--color-text-primary));
+  }
+
+  h4 {
+    font-size: 1.25rem;
+    font-weight: 600;
+    line-height: 1.4;
+    color: rgb(var(--color-text-primary));
+  }
+
+  /* Links */
+  a {
+    color: rgb(var(--color-text-link));
+    text-decoration: none;
+    transition: color 200ms ease;
+  }
+
+  a:hover {
+    text-decoration: underline;
+  }
+
+  /* Text Selection - Light Theme */
+  ::selection {
+    background-color: rgba(59, 130, 246, 0.4);
+    /* Blue highlight */
+    color: #1e293b;
+    /* Dark text for light theme */
+  }
+
+  ::-moz-selection {
+    background-color: rgba(59, 130, 246, 0.4);
+    color: #1e293b;
+  }
+
+  /* Text Selection - Dark Theme */
+  .dark ::selection {
+    background-color: rgba(96, 165, 250, 0.5);
+    /* Brighter blue highlight */
+    color: #0f172a;
+    /* Dark text for better contrast */
+  }
+
+  .dark ::-moz-selection {
+    background-color: rgba(96, 165, 250, 0.5);
+    color: #0f172a;
+  }
+
+  .dark a:hover {
+    color: rgb(147 197 253);
+  }
+
+  /* Focus states */
+  *:focus-visible {
+    outline: none;
+    box-shadow: 0 0 0 2px rgb(var(--color-bg-primary)), 0 0 0 4px rgb(59 130 246 / 0.5);
+    border-radius: 4px;
+  }
+
+  /* Shimmer animation for skeletons */
+  @keyframes shimmer {
+    0% {
+      background-position: -200% 0;
+    }
+
+    100% {
+      background-position: 200% 0;
+    }
+  }
+
+  /* Smooth scrolling */
+  html {
+    scroll-behavior: smooth;
+  }
+
+  /* Selection */
+  ::selection {
+    background-color: rgb(59 130 246 / 0.2);
+    color: rgb(var(--color-text-primary));
+  }
+
+  /* Fix browser autocomplete styles */
+  input:-webkit-autofill,
+  input:-webkit-autofill:hover,
+  input:-webkit-autofill:focus,
+  input:-webkit-autofill:active {
+    -webkit-box-shadow: 0 0 0 1000px white inset !important;
+    -webkit-text-fill-color: #111827 !important;
+    transition: background-color 5000s ease-in-out 0s;
+  }
+
+  .dark input:-webkit-autofill,
+  .dark input:-webkit-autofill:hover,
+  .dark input:-webkit-autofill:focus,
+  .dark input:-webkit-autofill:active {
+    -webkit-box-shadow: 0 0 0 1000px #1F2937 inset !important;
+    -webkit-text-fill-color: #ffffff !important;
+  }
+}
+
+/* ===================================
+   Component Layer
+   =================================== */
+
+@layer components {
+
+  /* Container */
+  .container-custom {
+    width: 100%;
+    margin-left: auto;
+    margin-right: auto;
+    padding-left: 1rem;
+    padding-right: 1rem;
+  }
+
+  @media (min-width: 640px) {
+    .container-custom {
+      max-width: 640px;
+      padding-left: 1.5rem;
+      padding-right: 1.5rem;
+    }
+  }
+
+  @media (min-width: 768px) {
+    .container-custom {
+      max-width: 768px;
+    }
+  }
+
+  @media (min-width: 1024px) {
+    .container-custom {
+      max-width: 1024px;
+      padding-left: 2rem;
+      padding-right: 2rem;
+    }
+  }
+
+  @media (min-width: 1280px) {
+    .container-custom {
+      max-width: 1280px;
+    }
+  }
+}
+
+/* ===================================
+   Utility Layer
+   =================================== */
+
+@layer utilities {
+
+  /* Text balance */
+  .text-balance {
+    text-wrap: balance;
+  }
+
+  /* Scrollbar */
+  .scrollbar-thin {
+    scrollbar-width: thin;
+    scrollbar-color: rgb(var(--color-border-default)) transparent;
+  }
+
+  .scrollbar-none {
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+  }
+
+  .scrollbar-none::-webkit-scrollbar {
+    display: none;
+  }
+
+  /* Animations */
+  .animate-in {
+    animation: fadeIn 200ms ease-in-out;
+  }
+
+  .animate-out {
+    animation: fadeOut 200ms ease-in-out;
+  }
+}
