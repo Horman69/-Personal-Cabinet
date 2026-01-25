@@ -98,15 +98,6 @@ Environment Variables • Prisma Migrations
 ### Landing Page
 ![Landing Page](.github/screenshots/landing.png)
 
-### Dashboard
-![Dashboard](.github/screenshots/dashboard.png)
-
-### Admin Panel
-![Admin Panel](.github/screenshots/admin.png)
-
-### Dark Mode
-![Dark Mode](.github/screenshots/dark-mode.png)
-
 ---
 
 ## ⚡ Quick Start
